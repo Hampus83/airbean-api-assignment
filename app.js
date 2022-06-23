@@ -1,8 +1,9 @@
+const { response } = require('express');
 const express = require('express');
 const app = express();
 const PORT = 8000;
 
-const { getMenu, createAccount, checkIfAccountExists, compareCredentials } = require('./model/db');
+const { getMenu, createAccount, checkIfAccountExists, compareCredentials, checkIfUser, createUserOrder, createGuestOrder } = require('./model/db');
 
 app.use(express.json());
 
@@ -55,7 +56,29 @@ app.post('/api/login', async (request, response) => {
     response.json(resObj);
 });
 
+app.post('/api/order', async (request, response) => {
+    const resObj = {
+        success: false
+    }
 
+    const orderItems = request.body;
+
+    const userOrder = await checkIfUser(orderItems);
+
+    if (userOrder.length > 0) {
+        createUserOrder(orderItems);
+        resObj.success = true;
+        resObj.message = `Thank you, ${orderItems.username}, your order is on its way!`;
+        resObj.order = orderItems.products;
+    } else {
+        createGuestOrder(orderItems);
+        resObj.success = true;
+        resObj.message = 'Thank you, dear guest, your order is on its way!';
+        resObj.order = orderItems.products;
+    }
+
+    response.json(resObj);
+});
 
 app.listen(PORT, () => {
     console.log(`OK, here we go! Port: ${PORT}`);

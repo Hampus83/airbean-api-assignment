@@ -4,6 +4,8 @@ const menuObjects = require('../menu.json');
 
 const menu = new nedb({ filename: 'menu.db', autoload: true });
 const accounts = new nedb({ filename: 'accounts.db', autoload: true });
+const guestOrders = new nedb({ filename: 'guestOrders.db', autoload: true });
+const userOrders = new nedb({ filename: 'userOrders.db', autoload: true });
 
 async function getMenuDatabase() {
     const result = await menu.find({});
@@ -34,4 +36,19 @@ async function compareCredentials(credentials) {
     return result;
 }
 
-module.exports = { getMenu, createAccount, checkIfAccountExists, compareCredentials };
+async function checkIfUser(orderItems) {
+    const result = await accounts.find({ username: orderItems.username });
+    return result;
+}
+
+async function createUserOrder(orderItems) {
+    const result = await userOrders.insert({ orderItems });
+    return result;
+}
+
+async function createGuestOrder(orderItems) {
+    const result = await guestOrders.insert({ orderItems });
+    return result;
+}
+
+module.exports = { getMenu, createAccount, checkIfAccountExists, compareCredentials, checkIfUser, createUserOrder, createGuestOrder };
