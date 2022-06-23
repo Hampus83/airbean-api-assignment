@@ -61,6 +61,8 @@ app.post('/api/order', async (request, response) => {
         success: false
     }
 
+    const estTime = Math.floor(Math.random() * 40) + 5;
+
     const orderItems = request.body;
 
     const userOrder = await checkIfUser(orderItems);
@@ -68,13 +70,15 @@ app.post('/api/order', async (request, response) => {
     if (userOrder.length > 0) {
         createUserOrder(orderItems);
         resObj.success = true;
-        resObj.message = `Thank you, ${orderItems.username}, your order is on its way!`;
+        resObj.message = `Thank you ${orderItems.username}, your order is on its way!`;
         resObj.order = orderItems.products;
+        resObj.ETA = `${estTime} minutes`;
     } else {
         createGuestOrder(orderItems);
         resObj.success = true;
-        resObj.message = 'Thank you, dear guest, your order is on its way!';
+        resObj.message = `Thank you dear guest, your order is on its way!`;
         resObj.order = orderItems.products;
+        resObj.ETA = `${estTime} minutes`;
     }
 
     response.json(resObj);

@@ -47,7 +47,7 @@ async function createUserOrder(orderItems) {
 }
 
 async function createGuestOrder(orderItems) {
-    const result = await guestOrders.insert({ orderItems });
+    const result = await guestOrders.insert({ username: orderItems.username, order: orderItems.products });
     return result;
 }
 
