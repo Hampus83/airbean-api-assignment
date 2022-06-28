@@ -42,13 +42,59 @@ async function checkIfUser(orderItems) {
 }
 
 async function createUserOrder(orderItems) {
-    const result = await userOrders.insert({ orderItems });
+    const products = orderItems.products;
+
+    let total = 0;
+    
+    for (let product of products) {
+        total = total + product.price;
+    }
+
+    const orderNumber = await getUserOrderNumber();
+    const result = await userOrders.insert({ username: orderItems.username, order: orderItems.products, orderNumber: orderNumber, total: `SEK ${total}` });
+    
     return result;
 }
 
 async function createGuestOrder(orderItems) {
-    const result = await guestOrders.insert({ username: orderItems.username, order: orderItems.products });
+    const products = orderItems.products;
+
+    let total = 0;
+    
+    for (let product of products) {
+        total = total + product.price;
+    }
+    
+    const orderNumber = await getGuestOrderNumber();
+    const result = await guestOrders.insert({ username: orderItems.username, order: orderItems.products, orderNumber: orderNumber, total: `SEK ${total}` });
+    
     return result;
 }
 
-module.exports = { getMenu, createAccount, checkIfAccountExists, compareCredentials, checkIfUser, createUserOrder, createGuestOrder };
+async function getUserOrderNumber() {
+    let userOrderNumber = 1000;
+    const count = await userOrders.find({});
+    const result = userOrderNumber + count.length + 1;
+
+    return result;
+}
+
+async function getGuestOrderNumber() {
+    let guestOrderNumber = 5000;
+    const count = await guestOrders.find({});
+    const result = guestOrderNumber + count.length + 1;
+
+    return result;
+}
+
+async function getOrderTotal(products) {
+    let total = 0;
+
+    for (let product of products) {
+        total = total + product.price;
+    }
+
+    return total;
+}
+
+module.exports = { getMenu, createAccount, checkIfAccountExists, compareCredentials, checkIfUser, createUserOrder, createGuestOrder, getUserOrderNumber, getGuestOrderNumber, getOrderTotal };

@@ -1,9 +1,8 @@
-const { response } = require('express');
 const express = require('express');
 const app = express();
 const PORT = 8000;
 
-const { getMenu, createAccount, checkIfAccountExists, compareCredentials, checkIfUser, createUserOrder, createGuestOrder } = require('./model/db');
+const { getMenu, createAccount, checkIfAccountExists, compareCredentials, checkIfUser, createUserOrder, createGuestOrder, getUserOrderNumber, getGuestOrderNumber, getOrderTotal } = require('./model/db');
 
 app.use(express.json());
 
@@ -64,20 +63,29 @@ app.post('/api/order', async (request, response) => {
     const estTime = Math.floor(Math.random() * 40) + 5;
 
     const orderItems = request.body;
+    const products = request.body.products;
 
     const userOrder = await checkIfUser(orderItems);
 
-    if (userOrder.length > 0) {
+    if (orderItems.products.length === 0) {
+        resObj.message = 'You have to add a product to make an order';
+
+    } else if (userOrder.length > 0) {
         createUserOrder(orderItems);
         resObj.success = true;
         resObj.message = `Thank you ${orderItems.username}, your order is on its way!`;
         resObj.order = orderItems.products;
+        resObj.total = `SEK ${await getOrderTotal(products)}`;
+        resObj.orderNr = await getUserOrderNumber();
         resObj.ETA = `${estTime} minutes`;
+
     } else {
         createGuestOrder(orderItems);
         resObj.success = true;
         resObj.message = `Thank you dear guest, your order is on its way!`;
         resObj.order = orderItems.products;
+        resObj.total = `SEK ${await getOrderTotal(products)}`;
+        resObj.orderNr = await getGuestOrderNumber();
         resObj.ETA = `${estTime} minutes`;
     }
 
