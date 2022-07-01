@@ -1,8 +1,1 @@
-{"username":"Urboan","order":["Latte Macchiato","Kaffe Latte","Bryggkaffe"],"orderNumber":5004,"total":"142","_id":"0GFEAFeJXXONFEnC"}
-{"username":"Urboan","order":[{"id":1,"title":"Bryggkaffe","desc":"Bryggd på månadens bönor.","price":39},{"id":5,"title":"Kaffe Latte","desc":"Bryggd på månadens bönor.","price":54}],"orderNumber":5006,"_id":"8K62xm8LmyS4FNtx"}
-{"username":"Urboan","order":[{"id":1,"title":"Bryggkaffe","desc":"Bryggd på månadens bönor.","price":39},{"id":5,"title":"Kaffe Latte","desc":"Bryggd på månadens bönor.","price":54}],"orderNumber":5007,"_id":"EBlKcMv8uIUpGAMJ"}
-{"username":"Urrban","order":["Kaffe Macchiato","Kaffe Latte","Vanlig kaffe"],"orderNumber":5001,"_id":"VN8arjhLgHzajBQZ"}
-{"username":"glennn","order":[{"id":1,"title":"Bryggkaffe","desc":"Bryggd på månadens bönor.","price":39},{"id":5,"title":"Kaffe Latte","desc":"Bryggd på månadens bönor.","price":54}],"orderNumber":5008,"total":"SEK 93","_id":"aDOf9lN9phhyh6sH"}
-{"username":"Urboan","order":["Latte Macchiato","Kaffe Latte","Bryggkaffe"],"orderNumber":5003,"total":"142","_id":"duSMFe2uMrLjcdak"}
-{"username":"Urboan","order":[{"id":1,"title":"Bryggkaffe","desc":"Bryggd på månadens bönor.","price":39},{"id":5,"title":"Kaffe Latte","desc":"Bryggd på månadens bönor.","price":54}],"orderNumber":5005,"_id":"iRPnFDVRmqxIFSwl"}
-{"username":"Uräban","order":["Latte Macchiato","Kaffe Latte","Bryggkaffe"],"orderNumber":5002,"total":"142","_id":"vO9xaMtXpAS1YtPp"}
+{"username":"pauli","order":[{"id":5,"title":"Kaffe Latte","desc":"Bryggd på månadens bönor.","price":54}],"orderNumber":5016,"total":"SEK 54","orderTime":"20:32:14","_id":"xRZpPQpw2lWxi6bc"}

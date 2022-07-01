@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const PORT = 8000;
 
-const { getMenu, createAccount, checkIfAccountExists, compareCredentials, checkIfUser, createUserOrder, createGuestOrder, getUserOrderNumber, getGuestOrderNumber, getOrderTotal } = require('./model/db');
+const { getMenu, createAccount, checkIfAccountExists, compareCredentials, checkIfUser, createUserOrder, createGuestOrder, getUserOrderNumber, getGuestOrderNumber, getOrderTotal, getUserHistory } = require('./model/db');
 
 app.use(express.json());
 
@@ -84,9 +84,40 @@ app.post('/api/order', async (request, response) => {
         resObj.success = true;
         resObj.message = `Thank you dear guest, your order is on its way!`;
         resObj.order = orderItems.products;
-        resObj.total = `SEK ${await getOrderTotal(products)}`;
+        resObj.total = `SEK ${ await getOrderTotal(products)}`;
         resObj.orderNr = await getGuestOrderNumber();
         resObj.ETA = `${estTime} minutes`;
+    }
+
+    response.json(resObj);
+});
+
+app.get('/api/order/:user', async (request, response) => {
+    const resObj = {
+        success: false,
+        message: 'Sorry, you are not logged in'
+    }
+
+    const user = request.params.user;
+
+    const result = await getUserHistory(user);
+
+    const history = [];
+
+    for (let i = 0; i < result.length; i++) {
+        const userHistory = {
+            orderNumber: result[i].orderNumber,
+            orderTotal: result[i].total,
+            timeOfOrder: result[i].orderTime
+        }
+
+        history.push(userHistory);
+
+        if (result.length > 0) {
+            resObj.success = true;
+            resObj.message = `Here is the order-history for user ${user}`;
+            resObj.orderHistory = history; 
+        }
     }
 
     response.json(resObj);

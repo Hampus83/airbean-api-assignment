@@ -44,29 +44,17 @@ async function checkIfUser(orderItems) {
 async function createUserOrder(orderItems) {
     const products = orderItems.products;
 
-    let total = 0;
-    
-    for (let product of products) {
-        total = total + product.price;
-    }
-
     const orderNumber = await getUserOrderNumber();
-    const result = await userOrders.insert({ username: orderItems.username, order: orderItems.products, orderNumber: orderNumber, total: `SEK ${total}` });
+    const result = await userOrders.insert({ username: orderItems.username, order: orderItems.products, orderNumber: orderNumber, total: `SEK ${await getOrderTotal(products)}`, orderTime: await setOrderTime() });
     
     return result;
 }
 
 async function createGuestOrder(orderItems) {
     const products = orderItems.products;
-
-    let total = 0;
-    
-    for (let product of products) {
-        total = total + product.price;
-    }
     
     const orderNumber = await getGuestOrderNumber();
-    const result = await guestOrders.insert({ username: orderItems.username, order: orderItems.products, orderNumber: orderNumber, total: `SEK ${total}` });
+    const result = await guestOrders.insert({ username: orderItems.username, order: orderItems.products, orderNumber: orderNumber, total: `SEK ${await getOrderTotal(products)}`, orderTime: await setOrderTime() });
     
     return result;
 }
@@ -97,4 +85,17 @@ async function getOrderTotal(products) {
     return total;
 }
 
-module.exports = { getMenu, createAccount, checkIfAccountExists, compareCredentials, checkIfUser, createUserOrder, createGuestOrder, getUserOrderNumber, getGuestOrderNumber, getOrderTotal };
+async function setOrderTime() {
+    const orderTime = new Date().toLocaleTimeString()
+    console.log(`time of order: ${orderTime}`);
+
+    return orderTime;
+}
+
+async function getUserHistory(user) {
+    const result = userOrders.find({ username: user });
+
+    return result;
+}
+
+module.exports = { getMenu, createAccount, checkIfAccountExists, compareCredentials, checkIfUser, createUserOrder, createGuestOrder, getUserOrderNumber, getGuestOrderNumber, getOrderTotal, getUserHistory };
