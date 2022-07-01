@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const PORT = 8000;
 
-const { getMenu, createAccount, checkIfAccountExists, compareCredentials, checkIfUser, createUserOrder, createGuestOrder, getUserOrderNumber, getGuestOrderNumber, getOrderTotal, getUserHistory } = require('./model/db');
+const { getMenu, createAccount, checkIfAccountExists, compareCredentials, checkIfUser, createUserOrder, createGuestOrder, getUserOrderNumber, getGuestOrderNumber, getOrderTotal, getUserHistory, setDeliveryTime } = require('./model/db');
 
 app.use(express.json());
 
@@ -60,8 +60,6 @@ app.post('/api/order', async (request, response) => {
         success: false
     }
 
-    const estTime = Math.floor(Math.random() * 40) + 5;
-
     const orderItems = request.body;
     const products = request.body.products;
 
@@ -77,7 +75,7 @@ app.post('/api/order', async (request, response) => {
         resObj.order = orderItems.products;
         resObj.total = `SEK ${await getOrderTotal(products)}`;
         resObj.orderNr = await getUserOrderNumber();
-        resObj.ETA = `${estTime} minutes`;
+        // resObj.ETA = await setDeliveryTime();
 
     } else {
         createGuestOrder(orderItems);
@@ -86,9 +84,9 @@ app.post('/api/order', async (request, response) => {
         resObj.order = orderItems.products;
         resObj.total = `SEK ${ await getOrderTotal(products)}`;
         resObj.orderNr = await getGuestOrderNumber();
-        resObj.ETA = `${estTime} minutes`;
+        // resObj.ETA = await setDeliveryTime();
     }
-
+    
     response.json(resObj);
 });
 
@@ -104,11 +102,12 @@ app.get('/api/order/:user', async (request, response) => {
 
     const history = [];
 
+    // console.log(Date.now() / 1000);
+
     for (let i = 0; i < result.length; i++) {
         const userHistory = {
             orderNumber: result[i].orderNumber,
             orderTotal: result[i].total,
-            timeOfOrder: result[i].orderTime
         }
 
         history.push(userHistory);

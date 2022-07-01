@@ -45,17 +45,18 @@ async function createUserOrder(orderItems) {
     const products = orderItems.products;
 
     const orderNumber = await getUserOrderNumber();
-    const result = await userOrders.insert({ username: orderItems.username, order: orderItems.products, orderNumber: orderNumber, total: `SEK ${await getOrderTotal(products)}`, orderTime: await setOrderTime() });
+    const result = await userOrders.insert({ username: orderItems.username, order: orderItems.products, orderNumber: orderNumber, total: `SEK ${await getOrderTotal(products)}`, estTimeOfDelivery: await setDeliveryTime() });
     
     return result;
 }
 
 async function createGuestOrder(orderItems) {
     const products = orderItems.products;
-    
+    // const deliveryTime = orderItems.ETA;
     const orderNumber = await getGuestOrderNumber();
-    const result = await guestOrders.insert({ username: orderItems.username, order: orderItems.products, orderNumber: orderNumber, total: `SEK ${await getOrderTotal(products)}`, orderTime: await setOrderTime() });
-    
+    // console.log(deliveryTime);
+    const result = await guestOrders.insert({ username: orderItems.username, order: orderItems.products, orderNumber: orderNumber, total: `SEK ${await getOrderTotal(products)}`, estTimeOfDelivery: await setDeliveryTime() });
+
     return result;
 }
 
@@ -85,11 +86,22 @@ async function getOrderTotal(products) {
     return total;
 }
 
-async function setOrderTime() {
-    const orderTime = new Date().toLocaleTimeString()
-    console.log(`time of order: ${orderTime}`);
+async function getTimeOfOrder() {
+    
+}
 
-    return orderTime;
+async function setDeliveryTime() {
+    const deliveryTime = new Date();
+
+    const estTime = Math.floor(Math.random() * 40) + 5;
+
+    deliveryTime.setMinutes(deliveryTime.getMinutes() + estTime);
+
+    // console.log(estTime);
+
+    console.log(`Estimated time of delivery: ${deliveryTime.toLocaleTimeString()}`);
+
+    return deliveryTime.toLocaleTimeString();
 }
 
 async function getUserHistory(user) {
@@ -98,4 +110,4 @@ async function getUserHistory(user) {
     return result;
 }
 
-module.exports = { getMenu, createAccount, checkIfAccountExists, compareCredentials, checkIfUser, createUserOrder, createGuestOrder, getUserOrderNumber, getGuestOrderNumber, getOrderTotal, getUserHistory };
+module.exports = { getMenu, createAccount, checkIfAccountExists, compareCredentials, checkIfUser, createUserOrder, createGuestOrder, getUserOrderNumber, getGuestOrderNumber, getOrderTotal, getUserHistory, setDeliveryTime };
