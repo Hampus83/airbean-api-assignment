@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const PORT = 8000;
 
-const { getMenu, createAccount, checkIfAccountExists, compareCredentials, checkIfUser, createUserOrder, createGuestOrder, getUserOrderNumber, getGuestOrderNumber, getOrderTotal, getUserHistory, setDeliveryTime } = require('./model/db');
+const { getMenu, createAccount, checkIfAccountExists, compareCredentials, checkIfUser, createUserOrder, createGuestOrder, getUserOrderNumber, getGuestOrderNumber, getOrderTotal, getUserHistory } = require('./model/db');
 
 app.use(express.json());
 
@@ -75,8 +75,6 @@ app.post('/api/order', async (request, response) => {
         resObj.order = orderItems.products;
         resObj.total = `SEK ${await getOrderTotal(products)}`;
         resObj.orderNr = await getUserOrderNumber();
-        // resObj.ETA = orderItems.estTimeOfDelivery;
-
     } else {
         createGuestOrder(orderItems);
         resObj.success = true;
@@ -84,7 +82,6 @@ app.post('/api/order', async (request, response) => {
         resObj.order = orderItems.products;
         resObj.total = `SEK ${ await getOrderTotal(products)}`;
         resObj.orderNr = await getGuestOrderNumber();
-        // resObj.ETA = await setDeliveryTime();
     }
     
     response.json(resObj);
@@ -102,17 +99,13 @@ app.get('/api/order/:user', async (request, response) => {
 
     const history = [];
 
-    // console.log(Date.now() / 1000);
-
     for (let i = 0; i < result.length; i++) {
         let delivered = false;
 
-        const timeOfSearch = new Date().toLocaleTimeString();
-        console.log(timeOfSearch);
-        // const timeBetween = Number(result[i].estTimeOfDelivery) - Number(timeOfSearch);
-        // console.log(timeBetween);
+        const timeOfSearch = new Date().toLocaleString();
+        // console.log(timeOfSearch);
+
         if (timeOfSearch > result[i].estTimeOfDelivery) {
-            console.log('delivered');
             delivered = true;
         }
 
@@ -123,14 +116,12 @@ app.get('/api/order/:user', async (request, response) => {
             delivered: delivered
         }
 
-        // console.log(result[i].estTimeOfDelivery);
-
         history.push(userHistory);
 
         if (result.length > 0) {
             resObj.success = true;
             resObj.message = `Here is the order-history for user ${user}`;
-            resObj.orderHistory = history; 
+            resObj.orderHistory = history;
         }
     }
 

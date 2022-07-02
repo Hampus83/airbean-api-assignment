@@ -87,10 +87,6 @@ async function getOrderTotal(products) {
     return total;
 }
 
-async function getTimeOfOrder() {
-    
-}
-
 async function setDeliveryTime() {
     const deliveryTime = new Date();
 
@@ -98,10 +94,10 @@ async function setDeliveryTime() {
 
     deliveryTime.setMinutes(deliveryTime.getMinutes() + estTime);
 
-    console.log(`ETA: ${estTime} minutes`);
-    console.log(`Estimated time of delivery: ${deliveryTime.toLocaleTimeString()}`);
+    // console.log(`ETA: ${estTime} minutes`);
+    // console.log(`Estimated time of delivery: ${deliveryTime.toLocaleString()}`);
 
-    return deliveryTime.toLocaleTimeString();
+    return deliveryTime.toLocaleString();
 }
 
 async function getUserHistory(user) {
@@ -110,4 +106,4 @@ async function getUserHistory(user) {
     return result;
 }
 
-module.exports = { getMenu, createAccount, checkIfAccountExists, compareCredentials, checkIfUser, createUserOrder, createGuestOrder, getUserOrderNumber, getGuestOrderNumber, getOrderTotal, getUserHistory, setDeliveryTime };
+module.exports = { getMenu, createAccount, checkIfAccountExists, compareCredentials, checkIfUser, createUserOrder, createGuestOrder, getUserOrderNumber, getGuestOrderNumber, getOrderTotal, getUserHistory };
