@@ -75,7 +75,7 @@ app.post('/api/order', async (request, response) => {
         resObj.order = orderItems.products;
         resObj.total = `SEK ${await getOrderTotal(products)}`;
         resObj.orderNr = await getUserOrderNumber();
-        // resObj.ETA = await setDeliveryTime();
+        // resObj.ETA = orderItems.estTimeOfDelivery;
 
     } else {
         createGuestOrder(orderItems);
@@ -105,10 +105,25 @@ app.get('/api/order/:user', async (request, response) => {
     // console.log(Date.now() / 1000);
 
     for (let i = 0; i < result.length; i++) {
+        let delivered = false;
+
+        const timeOfSearch = new Date().toLocaleTimeString();
+        console.log(timeOfSearch);
+        // const timeBetween = Number(result[i].estTimeOfDelivery) - Number(timeOfSearch);
+        // console.log(timeBetween);
+        if (timeOfSearch > result[i].estTimeOfDelivery) {
+            console.log('delivered');
+            delivered = true;
+        }
+
         const userHistory = {
             orderNumber: result[i].orderNumber,
             orderTotal: result[i].total,
+            ETA: result[i].estTimeOfDelivery,
+            delivered: delivered
         }
+
+        // console.log(result[i].estTimeOfDelivery);
 
         history.push(userHistory);
 

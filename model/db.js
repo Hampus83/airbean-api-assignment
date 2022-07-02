@@ -45,6 +45,7 @@ async function createUserOrder(orderItems) {
     const products = orderItems.products;
 
     const orderNumber = await getUserOrderNumber();
+
     const result = await userOrders.insert({ username: orderItems.username, order: orderItems.products, orderNumber: orderNumber, total: `SEK ${await getOrderTotal(products)}`, estTimeOfDelivery: await setDeliveryTime() });
     
     return result;
@@ -52,9 +53,9 @@ async function createUserOrder(orderItems) {
 
 async function createGuestOrder(orderItems) {
     const products = orderItems.products;
-    // const deliveryTime = orderItems.ETA;
+    
     const orderNumber = await getGuestOrderNumber();
-    // console.log(deliveryTime);
+    
     const result = await guestOrders.insert({ username: orderItems.username, order: orderItems.products, orderNumber: orderNumber, total: `SEK ${await getOrderTotal(products)}`, estTimeOfDelivery: await setDeliveryTime() });
 
     return result;
@@ -97,8 +98,7 @@ async function setDeliveryTime() {
 
     deliveryTime.setMinutes(deliveryTime.getMinutes() + estTime);
 
-    // console.log(estTime);
-
+    console.log(`ETA: ${estTime} minutes`);
     console.log(`Estimated time of delivery: ${deliveryTime.toLocaleTimeString()}`);
 
     return deliveryTime.toLocaleTimeString();
