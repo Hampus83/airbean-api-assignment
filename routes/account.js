@@ -16,7 +16,7 @@ router.post('/signup', async (request, response) => {
     } else {
         await createAccount(credentials);
         resObj.success = true;
-        resObj.message = `Account created! Welcome, ${credentials.username}!`;
+        resObj.message = `Account created! username: ${credentials.username}`;
     }
 
     response.json(resObj);
@@ -33,7 +33,7 @@ router.post('/login', async (request, response) => {
 
     if (result.length > 0) {
         resObj.success = true;
-        resObj.message = `Welcome, ${credentials.username}!`;
+        resObj.message = `Logged in as user: ${credentials.username}`;
     }
 
     response.json(resObj);

@@ -16,19 +16,19 @@ router.post('/', async (request, response) => {
     const userOrder = await checkIfUser(orderItems);
 
     if (orderItems.products.length === 0) {
-        resObj.message = 'You have to add a product to make an order';
+        resObj.message = 'Product needs to be added to make an order';
 
     } else if (userOrder.length > 0) {
         createUserOrder(orderItems);
         resObj.success = true;
-        resObj.message = `Thank you ${orderItems.username}, your order is on its way!`;
+        resObj.message = `Order placed by user: ${orderItems.username}`;
         resObj.order = orderItems.products;
         resObj.total = `SEK ${await getOrderTotal(products)}`;
         resObj.orderNr = await getUserOrderNumber();
     } else {
         createGuestOrder(orderItems);
         resObj.success = true;
-        resObj.message = `Thank you dear guest, your order is on its way!`;
+        resObj.message = `Order placed by 'guest'`;
         resObj.order = orderItems.products;
         resObj.total = `SEK ${ await getOrderTotal(products)}`;
         resObj.orderNr = await getGuestOrderNumber();
@@ -40,7 +40,7 @@ router.post('/', async (request, response) => {
 router.get('/:user', async (request, response) => {
     const resObj = {
         success: false,
-        message: 'Sorry, you are not logged in'
+        message: 'Not logged in'
     }
 
     const user = request.params.user;
@@ -70,7 +70,7 @@ router.get('/:user', async (request, response) => {
 
         if (result.length > 0) {
             resObj.success = true;
-            resObj.message = `Here is the order-history for user ${user}`;
+            resObj.message = `Order-history for user ${user}`;
             resObj.orderHistory = history;
         }
     }
