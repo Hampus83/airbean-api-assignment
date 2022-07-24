@@ -44,16 +44,13 @@ router.get('/:user', async (request, response) => {
     }
 
     const user = request.params.user;
-
     const result = await getUserHistory(user);
-
     const history = [];
 
     for (let i = 0; i < result.length; i++) {
         let delivered = false;
 
         const timeOfSearch = new Date().toLocaleString();
-        // console.log(timeOfSearch);
 
         if (timeOfSearch > result[i].estTimeOfDelivery) {
             delivered = true;

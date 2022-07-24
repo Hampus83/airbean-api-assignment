@@ -5,9 +5,7 @@ const userOrders = new nedb({ filename: 'userOrders.db', autoload: true });
 
 async function createUserOrder(orderItems) {
     const products = orderItems.products;
-
     const orderNumber = await getUserOrderNumber();
-
     const result = await userOrders.insert({ username: orderItems.username, order: orderItems.products, orderNumber: orderNumber, total: `SEK ${await getOrderTotal(products)}`, estTimeOfDelivery: await setDeliveryTime() });
     
     return result;
@@ -15,9 +13,7 @@ async function createUserOrder(orderItems) {
 
 async function createGuestOrder(orderItems) {
     const products = orderItems.products;
-    
     const orderNumber = await getGuestOrderNumber();
-    
     const result = await guestOrders.insert({ username: orderItems.username, order: orderItems.products, orderNumber: orderNumber, total: `SEK ${await getOrderTotal(products)}`, estTimeOfDelivery: await setDeliveryTime() });
 
     return result;
@@ -51,13 +47,8 @@ async function getOrderTotal(products) {
 
 async function setDeliveryTime() {
     const deliveryTime = new Date();
-
     const estTime = Math.floor(Math.random() * 40) + 5;
-
     deliveryTime.setMinutes(deliveryTime.getMinutes() + estTime);
-
-    // console.log(`ETA: ${estTime} minutes`);
-    // console.log(`Estimated time of delivery: ${deliveryTime.toLocaleString()}`);
 
     return deliveryTime.toLocaleString();
 }
